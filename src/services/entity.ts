@@ -1,43 +1,36 @@
 import { Entity } from "../interfaces/entity";
-import fs from "fs";
+import { rewriteJSON } from "../utils/rewriteJSON";
+import { readJSON } from "../utils/readJSON";
 
-let entities: Entity[] = [
-  {
-    id: 1,
-    name: "entity",
-    powers: { first_power: false, second_power: true },
-  },
-  {
-    id: 2,
-    name: "entity",
-    powers: { first_power: false, second_power: true },
-  },
-];
+let entities: Entity[] = getAllEntities();
+
 function addEntity(entity: Entity): void {
   entities.push(entity);
-  fs.writeFileSync("./entities.json", JSON.stringify(entities), {
-    encoding: "utf8",
-    flag: "w",
-  });
+  rewriteJSON("./entities.json", entities);
 }
 
 function getSpecificEntity(_id: number): Entity {
-  let content = JSON.parse(
-    fs.readFileSync("./entities.json", {
-      encoding: "utf8",
-      flag: "r",
-    })
-  );
-
-  return content.filter((e: Entity) => e.id === _id);
+  return getAllEntities()[entities.findIndex((e) => e.id === _id)];
 }
 
-function getAllEntities(): string {
-  let content = fs.readFileSync("./entities.json", {
-    encoding: "utf8",
-    flag: "r",
-  });
-  return content;
+function getAllEntities(): Entity[] {
+  return readJSON("./entities.json");
 }
 
-export { addEntity, getAllEntities, getSpecificEntity };
+function deleteSpecificEntity(_id: number): void {
+  let entityIndex: number = entities.findIndex((e) => e.id === _id);
+  if (entityIndex > -1) {
+    entities.splice(entityIndex, 1);
+    rewriteJSON("./entities.json", entities);
+  }
+}
+
+function updateSpecificEntity(_id: number, entity: Entity): void {
+  let entityIndex: number = entities.findIndex((e) => e.id === _id);
+  if (entityIndex > -1) {
+    entities[entityIndex] = entity;
+  }
+  rewriteJSON("./entities.json", entities);
+}
+
+export { addEntity, getAllEntities, getSpecificEntity, deleteSpecificEntity, updateSpecificEntity };
