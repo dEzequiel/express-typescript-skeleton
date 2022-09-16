@@ -17,18 +17,15 @@ function registerNewUser(user: User): boolean {
     });
     rewriteJSON("./users.json", users);
     return true;
-  } 
+  }
 
-  return false
+  return false;
 }
 
 function loggingExistingUser({ email, password }: Auth): boolean {
   let user: User | undefined = users.find((u) => u.email === email);
   if (user != undefined) {
-    const isPasswordCorrect: boolean = verified(
-      user.password,
-      encrypt(user.password)
-    );
+    const isPasswordCorrect: boolean = verified(password, user.password);
     if (isPasswordCorrect) {
       return true;
     }
