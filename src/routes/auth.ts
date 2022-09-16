@@ -1,10 +1,21 @@
-import { Router } from "express"
-import { getUsers, logUser, registerUser } from "../controllers/auth"
+import { Router } from "express";
+import { getUsers, logUser, registerUser } from "../controllers/auth";
 
-const router  = Router()
+const router = Router();
 
-router.post("/register", registerUser)
-router.post("/login", logUser)
-router.get("/", getUsers)
+/**
+ * /auth/register [POST]
+ */
+router.post("/register", registerUser);
 
-export { router }
+/**
+ * /auth/login [POST]
+ */
+router.post("/login", logUser);
+
+/**
+ * /auth [GET]
+ */
+router.get("/", getUsers);
+
+export { router };
