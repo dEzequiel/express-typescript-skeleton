@@ -7,13 +7,25 @@ import {
   deleteSpecificEntity,
   updateSpecificEntity,
 } from "../services/entity";
+import { AppError } from "../exceptions/AppError";
+import { HttpCode } from "../exceptions/HttpCode";
+import { Entity } from "../interfaces/entity";
 
 function postEntity(req: Request, res: Response): void {
   try {
-    addEntity(req.body);
-    res.status(201).send(req.body);
-  } catch (e) {
-    handleHttp(res, "ERROR_POST_ENTITY");
+    const { id } = req.body;
+    if (!addEntity(req.body)) {
+      throw new AppError({
+        httpCode: HttpCode.BAD_REQUEST,
+        description: "Entity is already registered",
+      });
+    } else {
+      res.status(HttpCode.OK).send(getSpecificEntity(id));
+    }
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      res.status(error.httpCode).send({ error });
+    }
   }
 }
 
@@ -28,29 +40,56 @@ function getEntities(req: Request, res: Response): void {
 function getEntity(req: Request, res: Response): void {
   try {
     const id = req.params.id;
-    res.status(200).send(getSpecificEntity(Number(id)));
-  } catch (e) {
-    handleHttp(res, "ERROR_GET_SPECIFIC_ENTITY");
+    const entity: Entity | undefined = getSpecificEntity(Number(id));
+    if (entity === undefined) {
+      throw new AppError({
+        httpCode: HttpCode.NOT_FOUND,
+        description: `Entity with ID=${id} not found`,
+      });
+    } else {
+      res.status(HttpCode.OK).send(entity);
+    }
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      res.status(error.httpCode).send({ error });
+    }
   }
 }
 
 function deleteEntity(req: Request, res: Response): void {
   try {
     const id = req.params.id;
-    deleteSpecificEntity(Number(id))
-    res.status(200).send(`Entity with ID=${id} deleted sucesfully`);
-  } catch (e) {
-    handleHttp(res, "ERROR_DELETE_ENTITY");
+    if (!deleteSpecificEntity(Number(id))) {
+      throw new AppError({
+        httpCode: HttpCode.NOT_FOUND,
+        description: `Entity with ID=${id} not found`,
+      });
+    } else {
+      res.status(HttpCode.OK).send(`Entity with ID=${id} deleted sucesfully`);
+    }
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      res.status(error.httpCode).send({ error });
+    }
   }
 }
 
 function updateEntity(req: Request, res: Response): void {
   try {
     const id = req.params.id;
-    updateSpecificEntity(Number(id), req.body)
-    res.status(200).send(`Entity with ID=${id} updated sucesfully`);
-  } catch (e) {
-    handleHttp(res, "ERROR_UPDATE_ENTITY");
+    if(!updateSpecificEntity(Number(id), req.body)) {
+      throw new AppError({
+        httpCode: HttpCode.NOT_FOUND,
+        description: `Entity with ID=${id} not found`,
+      });
+    }
+    else {
+      res.status(HttpCode.OK).send(`Entity with ID=${id} updated sucesfully`);
+    }
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      res.status(error.httpCode).send({ error });
+    }
   }
 }
 
