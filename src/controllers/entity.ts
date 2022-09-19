@@ -24,8 +24,10 @@ function postEntity(req: Request, res: Response): void {
       res.status(HttpCode.OK).send(getSpecificEntity(id));
     }
   } catch (error: unknown) {
-    if (error instanceof AppError) {
-      res.status(error.httpCode).send({ error });
+    if (!ErrorHandler.isTrustedError(error)) {
+      ErrorHandler.handleUntrustedError(error);
+    } else {
+      ErrorHandler.handleTrustedError(error, res);
     }
   }
 }
