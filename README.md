@@ -1,6 +1,11 @@
-# 
+# Introduction
 
-# Entities
+REST API skeleton made in Express using TypeScript, implements error handling, middlewares, JWA authorization and file system I/O. All the process was made following [Leifer Mendez](https://github.com/leifermendez) lessons about Express with TypeScript. 
+
+
+Take a look at my notes made during the API creation process. You can find notes about error handling, paths, middlewares, controllers... Available in [Notion](https://elegant-radium-f35.notion.site/Express-1e905fc2ffa74090a0885ec33f982441)(Spanish).
+
+# **Route:** Entity
 
 ## **Get all entities**
 
@@ -97,7 +102,7 @@ This endpoint deletes existing entity.
   - **Code:** 404 NOT FOUND <br />
     **Content:** `{ "Entity with ID=id not found" }`
 
-# Auth
+# **Route:** Auth
 
 ## **Post new user**
 
@@ -169,4 +174,4 @@ This API uses the following error codes:
 | 401            | Unauthorized -- Your JWT token is wrong.                                    |
 | 404            | Not Found -- The specified entity could not be found.                       |
 | 500            | Internal Server Error -- We had a problem with our server. Try again later. |
-|                |                                                                             
+                                                                           
