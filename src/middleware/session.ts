@@ -23,7 +23,7 @@ function checkSession(req: RequestExt, res: Response, next: NextFunction) {
     }
   } catch (error: unknown) {
     console.log(error);
-    res.status(400).send("NO VALIDA");
+    res.status(HttpCode.UNAUTHORIZED).send(error);
   }
 }
 

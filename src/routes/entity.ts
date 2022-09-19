@@ -22,7 +22,7 @@ router.get("/", getEntities);
 /**
  * /entity/1 [GET]
  */
-router.get("/:id", getEntity);
+router.get("/id/:id", getEntity);
 
 /**
  * /entity [POST]
@@ -32,11 +32,11 @@ router.post("/", postEntity);
 /**
  * /entity/3 [PUT]
  */
-router.put("/:id", updateEntity);
+router.put("/id/:id", updateEntity);
 
 /**
  * /entity/4 [DELETE]
  */
-router.delete("/:id", deleteEntity);
+router.delete("/id/:id", deleteEntity);
 
 export { router };

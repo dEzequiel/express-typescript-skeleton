@@ -25,7 +25,6 @@ function loggingExistingUser(auth: Auth): boolean {
   let user: User | undefined = users.find((u) => u.email === auth.email);
   if (user != undefined) {
     const isPasswordCorrect: boolean = verified(auth.password, user.password);
-    const token = generateToken(auth.email);
     if (isPasswordCorrect) {
       return true;
     }
