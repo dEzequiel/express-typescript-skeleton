@@ -9,6 +9,8 @@ import {
 } from "../services/auth";
 import { handleHttp } from "../utils/error.handle";
 import { ErrorHandler } from "../exceptions/ErrorHandler";
+import { generateToken } from "../utils/jwt.handler";
+import { RequestExt } from "../interfaces/RequestExt";
 
 function registerUser(req: Request, res: Response): void {
   try {
@@ -41,7 +43,13 @@ function logUser(req: Request, res: Response): void {
         description: "EMAIL OR PASSWORD ARE INCORRECT",
       });
     } else {
-      res.status(HttpCode.OK).send(getSpecificUser(email));
+
+      const data = {
+        user: getSpecificUser(email),
+        token: generateToken(email)
+      }
+
+      res.status(HttpCode.OK).send(data);
     }
   } catch (error: unknown) {
     if (!ErrorHandler.isTrustedError(error)) {
@@ -52,9 +60,10 @@ function logUser(req: Request, res: Response): void {
   }
 }
 
-function getUsers(req: Request, res: Response): void {
+// Para que este controlador responda debes de tener un JWT valido.
+function getUsers(req: RequestExt, res: Response): void {
   try {
-    res.status(HttpCode.OK).send(getAllUsers());
+    res.status(HttpCode.OK).send({data: getAllUsers(), request_by: req.user});
   } catch (e) {
     handleHttp(res, "ERROR_GETTING_USERS");
   }

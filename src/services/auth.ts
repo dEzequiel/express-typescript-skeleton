@@ -3,8 +3,7 @@ import { User } from "../interfaces/user";
 import { rewriteJSON } from "../utils/rewriteJSON";
 import { readJSON } from "../utils/readJSON";
 import { encrypt, verified } from "../utils/bcrypt.handle";
-import { AppError } from "../exceptions/AppError";
-import { HttpCode } from "../exceptions/HttpCode";
+import { generateToken } from "../utils/jwt.handler";
 
 let users: User[] = getAllUsers();
 function registerNewUser(user: User): boolean {
@@ -22,10 +21,11 @@ function registerNewUser(user: User): boolean {
   return false;
 }
 
-function loggingExistingUser({ email, password }: Auth): boolean {
-  let user: User | undefined = users.find((u) => u.email === email);
+function loggingExistingUser(auth: Auth): boolean {
+  let user: User | undefined = users.find((u) => u.email === auth.email);
   if (user != undefined) {
-    const isPasswordCorrect: boolean = verified(password, user.password);
+    const isPasswordCorrect: boolean = verified(auth.password, user.password);
+    const token = generateToken(auth.email);
     if (isPasswordCorrect) {
       return true;
     }
