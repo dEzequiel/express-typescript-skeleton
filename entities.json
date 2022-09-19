@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "eze",
+    "powers": { "first_power": false, "second_power": true }
+  },
+  {
+    "id": 2,
+    "name": "lalo",
+    "powers": { "first_power": false, "second_power": true }
+  },
+  {
+    "id": 3,
+    "name": "mami",
+    "powers": { "first_power": false, "second_power": true }
+  },
+  {
+    "id": 4,
+    "name": "dogi",
+    "powers": { "first_power": false, "second_power": true }
+  }
+]
