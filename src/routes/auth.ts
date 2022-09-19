@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getUsers, logUser, registerUser } from "../controllers/auth";
+import { checkSession } from "../middleware/session";
 
 const router = Router();
 
@@ -15,7 +16,8 @@ router.post("/login", logUser);
 
 /**
  * /auth [GET]
+ * Unicamente deberian de acceder personas autorizadas con JWT valido
  */
-router.get("/", getUsers);
+router.get("/", checkSession, getUsers);
 
 export { router };
