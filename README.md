@@ -7,6 +7,8 @@ Take a look at my notes made during the API creation process. You can find notes
 
 # **Route:** Entity
 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/19773916-c8d31e7d-d23e-4554-a1f0-0de8d6be5907?action=collection%2Ffork&collection-url=entityId%3D19773916-c8d31e7d-d23e-4554-a1f0-0de8d6be5907%26entityType%3Dcollection%26workspaceId%3Df637eb67-5ded-44a6-bc89-b134f47aaba0)
+
 ## **Get all entities**
 
 This endpoint retrieves all entities.
