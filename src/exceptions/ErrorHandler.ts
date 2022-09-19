@@ -20,8 +20,8 @@ export class ErrorHandler {
 
   /**
    * Los unicos errores que deberian de preocuparte son aquellos de la misma
-        aplicacion, no de fuera. Por esta funcion entran aquellos errores
-        conocidos.
+   * aplicacion, no de fuera. Por esta funcion entran aquellos errores
+   * conocidos.
    */
   static handleTrustedError(error: unknown, response: Response): void {
     if (error instanceof AppError)

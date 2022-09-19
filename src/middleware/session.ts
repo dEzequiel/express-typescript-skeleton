@@ -8,7 +8,7 @@ import { RequestExt } from "../interfaces/RequestExt";
 function checkSession(req: RequestExt, res: Response, next: NextFunction) {
   try {
     /**
-        1. Dentro de los headers de la request(informacion) hay un apartado que es
+        Dentro de los headers de la request(informacion) hay un apartado que es
         'authorization', hay dentro se encuentra el jwa token. */
     const JWT_USER = req.headers.authorization || null;
     const token = JWT_USER?.split(" ").pop();

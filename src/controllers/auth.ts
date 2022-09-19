@@ -43,11 +43,10 @@ function logUser(req: Request, res: Response): void {
         description: "EMAIL OR PASSWORD ARE INCORRECT",
       });
     } else {
-
       const data = {
         user: getSpecificUser(email),
-        token: generateToken(email)
-      }
+        token: generateToken(email),
+      };
 
       res.status(HttpCode.OK).send(data);
     }
@@ -60,10 +59,10 @@ function logUser(req: Request, res: Response): void {
   }
 }
 
-// Para que este controlador responda debes de tener un JWT valido.
+// To get into this controller, request need to have valid JWT inside request.header.authorization.
 function getUsers(req: RequestExt, res: Response): void {
   try {
-    res.status(HttpCode.OK).send({data: getAllUsers(), request_by: req.user});
+    res.status(HttpCode.OK).send({ data: getAllUsers(), request_by: req.user });
   } catch (e) {
     handleHttp(res, "ERROR_GETTING_USERS");
   }

@@ -10,6 +10,7 @@ import {
 import { AppError } from "../exceptions/AppError";
 import { HttpCode } from "../exceptions/HttpCode";
 import { Entity } from "../interfaces/entity";
+import { ErrorHandler } from "../exceptions/ErrorHandler";
 
 function postEntity(req: Request, res: Response): void {
   try {
@@ -49,9 +50,11 @@ function getEntity(req: Request, res: Response): void {
     } else {
       res.status(HttpCode.OK).send(entity);
     }
-  } catch (error: unknown) {
-    if (error instanceof AppError) {
-      res.status(error.httpCode).send({ error });
+  }catch (error: unknown) {
+    if (!ErrorHandler.isTrustedError(error)) {
+      ErrorHandler.handleUntrustedError(error);
+    } else {
+      ErrorHandler.handleTrustedError(error, res);
     }
   }
 }
@@ -68,8 +71,10 @@ function deleteEntity(req: Request, res: Response): void {
       res.status(HttpCode.OK).send(`Entity with ID=${id} deleted sucesfully`);
     }
   } catch (error: unknown) {
-    if (error instanceof AppError) {
-      res.status(error.httpCode).send({ error });
+    if (!ErrorHandler.isTrustedError(error)) {
+      ErrorHandler.handleUntrustedError(error);
+    } else {
+      ErrorHandler.handleTrustedError(error, res);
     }
   }
 }
@@ -87,8 +92,10 @@ function updateEntity(req: Request, res: Response): void {
       res.status(HttpCode.OK).send(`Entity with ID=${id} updated sucesfully`);
     }
   } catch (error: unknown) {
-    if (error instanceof AppError) {
-      res.status(error.httpCode).send({ error });
+    if (!ErrorHandler.isTrustedError(error)) {
+      ErrorHandler.handleUntrustedError(error);
+    } else {
+      ErrorHandler.handleTrustedError(error, res);
     }
   }
 }
