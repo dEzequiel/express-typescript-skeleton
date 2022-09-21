@@ -1,51 +1,31 @@
 import { Entity } from "../interfaces/entity";
-import { rewriteJSON } from "../utils/rewriteJSON";
-import { readJSON } from "../utils/readJSON";
+import EntityModel from "../models/entity.model";
 
-let entities: Entity[] = getAllEntities();
+async function addEntity(entity: Entity): Promise<boolean> {
+  let isRegister = await EntityModel.findOne(entity);
 
-function addEntity(entity: Entity): boolean {
-  let isRegister: Entity | undefined = entities.find((e) => e.id === entity.id);
-
-  if (isRegister === undefined) {
-    entities.push(entity);
-    rewriteJSON<Entity>("./entities.json", entities);
+  if (!isRegister) {
+    await EntityModel.create(entity);
     return true;
   }
-
   return false;
 }
-
-function getSpecificEntity(_id: number): Entity | undefined {
-  return getAllEntities().find((e) => e.id === _id);
+async function getSpecificEntity(id: string): Promise<Entity | null> {
+  const entity = await EntityModel.findOne({ _id: id });
+  return entity;
 }
 
-function getAllEntities(): Entity[] {
-  return readJSON<Entity>("./entities.json");
+async function getAllEntities() {
+  const entities = await EntityModel.find({});
+  return entities;
 }
 
-function deleteSpecificEntity(_id: number): boolean {
-  let entityIndex: number = entities.findIndex((e) => e.id === _id);
-  if (entityIndex > -1) {
-    entities.splice(entityIndex, 1);
-    rewriteJSON<Entity>("./entities.json", entities);
-    return true;
-  }
-
-  return false;
+async function deleteSpecificEntity(_id: number): Promise<boolean | null> {
+  return await EntityModel.findByIdAndRemove(_id);
 }
 
-function updateSpecificEntity(_id: number, entity: Entity): boolean {
-  let isRegister: Entity | undefined = entities.find((e) => e.id === _id);
-
-  if (isRegister != undefined) {
-    isRegister.name = entity.name;
-    isRegister.powers = entity.powers;
-    rewriteJSON<Entity>("./entities.json", entities);
-    return true;
-  }
-
-  return false;
+async function updateSpecificEntity(_id: number, entity: Entity): Promise<boolean | null> {
+  return await EntityModel.findByIdAndUpdate(_id, entity);
 }
 
 export {
