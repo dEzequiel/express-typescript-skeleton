@@ -9,7 +9,6 @@ import {
 } from "../services/entity";
 import { AppError } from "../exceptions/AppError";
 import { HttpCode } from "../exceptions/HttpCode";
-import { Entity } from "../interfaces/entity";
 import { ErrorHandler } from "../exceptions/ErrorHandler";
 
 function postEntity(req: Request, res: Response): void {
@@ -32,27 +31,28 @@ function postEntity(req: Request, res: Response): void {
   }
 }
 
-function getEntities(req: Request, res: Response): void {
+async function getEntities(req: Request, res: Response): Promise<void> {
   try {
-    res.status(200).send(getAllEntities());
+    const response = await getAllEntities();
+    res.status(200).send(response);
   } catch (e) {
     handleHttp(res, "ERROR_GET_ENTITY");
   }
 }
 
-function getEntity(req: Request, res: Response): void {
+async function getEntity(req: Request, res: Response): Promise<void> {
   try {
-    const id = req.params.id;
-    const entity: Entity | undefined = getSpecificEntity(Number(id));
-    if (entity === undefined) {
+    const { id } = req.params;
+    const response = await getSpecificEntity(id);
+    if (!response) {
       throw new AppError({
         httpCode: HttpCode.NOT_FOUND,
         description: `Entity with ID=${id} not found`,
       });
     } else {
-      res.status(HttpCode.OK).send(entity);
+      res.status(HttpCode.OK).send(response);
     }
-  }catch (error: unknown) {
+  } catch (error: unknown) {
     if (!ErrorHandler.isTrustedError(error)) {
       ErrorHandler.handleUntrustedError(error);
     } else {
@@ -84,13 +84,12 @@ function deleteEntity(req: Request, res: Response): void {
 function updateEntity(req: Request, res: Response): void {
   try {
     const id = req.params.id;
-    if(!updateSpecificEntity(Number(id), req.body)) {
+    if (!updateSpecificEntity(Number(id), req.body)) {
       throw new AppError({
         httpCode: HttpCode.NOT_FOUND,
         description: `Entity with ID=${id} not found`,
       });
-    }
-    else {
+    } else {
       res.status(HttpCode.OK).send(`Entity with ID=${id} updated sucesfully`);
     }
   } catch (error: unknown) {
