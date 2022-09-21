@@ -1,11 +1,10 @@
-type Entity = {
-    id: number,
-    name: string,
-    powers: {
-        first_power: boolean,
-        second_power: boolean
-    }
+interface Entity {
+  id: number;
+  name: string;
+  powers: {
+    first_power: boolean;
+    second_power: boolean;
+  };
 }
 
-
-export { Entity }
+export { Entity };
